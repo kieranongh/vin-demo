@@ -22,6 +22,7 @@ export class BreakdownService {
   getLot(lotCode: string) {
     let lot = this.lots[lotCode]
     if(!lot) {
+      //
       console.log('Load data from file')
       lot = this.loadData(lotCode)
     } else {
@@ -43,19 +44,29 @@ export class BreakdownService {
   }
   
   getYearVarietyBreakdown(lotCode: string): object {
-    return
+    return this.getBreakdown(lotCode, 'year', 'variety')
   }
 
-  getBreakdown(lotCode: string, key: string): object {
+  getBreakdownKey(cmp: object, key: string, key2?: string): string {
+    if (!key2) {
+      return cmp[key]
+    } else {
+      return `${cmp[key]}-${cmp[key2]}`
+    }
+  }
+
+  getBreakdown(lotCode: string, key: string, key2?: string): object {
     const lot = this.getLot(lotCode)
     const { components } = lot
+    
+    // sorts components by key and accumulates the percentages
     const binned = components.reduce((acc, curr) => {
       let prevPercentage = 0
-      if (acc[curr[key]]) {
-        prevPercentage = acc[curr[key]].percentage
+      if (acc[this.getBreakdownKey(curr, key, key2)]) {
+        prevPercentage = acc[this.getBreakdownKey(curr, key, key2)].percentage
       }
 
-      acc[curr[key]] = {
+      acc[this.getBreakdownKey(curr, key, key2)] = {
         percentage: prevPercentage + curr.percentage
       }
 
@@ -64,9 +75,9 @@ export class BreakdownService {
 
     const result = Object.entries(binned).map(([key, value]) => ({ key, percentage: value['percentage'] }))
     const sorted = result.sort((a, b) => b.percentage - a.percentage)
-    
+
     return {
-      breakdownType: key,
+      breakdownType: key2 ? `${key}-${key2}` : key,
       breakdown: sorted
     }
   }
