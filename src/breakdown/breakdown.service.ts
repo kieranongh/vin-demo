@@ -31,20 +31,14 @@ export class BreakdownService {
     return lot
   }
 
-  getYearBreakdown(lotCode: string): object {
-    return this.getBreakdown(lotCode, 'year')
-  }
-
-  getVarietyBreakdown(lotCode: string): object {
-    return this.getBreakdown(lotCode, 'variety')
-  }
-
-  getRegionBreakdown(lotCode: string): object {
-    return this.getBreakdown(lotCode, 'region')
-  }
-  
-  getYearVarietyBreakdown(lotCode: string): object {
-    return this.getBreakdown(lotCode, 'year', 'variety')
+  getYearBreakdownByKey(lotCode: string, keys: string): object {
+    const keySplit = keys.split('-')
+    console.log(`keySplit => `, keySplit)
+    let key = keySplit[0], key2 = null
+    if (keySplit.length > 1) {
+      key2 = keySplit[1]
+    }
+    return this.getBreakdown(lotCode, key, key2)
   }
 
   getBreakdownKey(cmp: object, key: string, key2?: string): string {
