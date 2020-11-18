@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as fs from 'fs'
 import { Lot } from './lot.interface'
 
@@ -14,9 +14,13 @@ export class LotsService {
       this.lots[lotCode] = data
       return data
     }
-    catch (error) {
-      console.log(`data load error => `, error)
-      return null
+    catch (err) {
+      throw new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: `Cannot find Lot: ${lotCode}`,
+        },
+        HttpStatus.NOT_FOUND
+      )
     }
   }
 
