@@ -31,4 +31,8 @@ export class LotsService {
     }
     return lot
   }
+
+  searchLot(query: string): Lot {
+    return
+  }
 }
