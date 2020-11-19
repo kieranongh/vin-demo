@@ -69,9 +69,14 @@ export class LotsService {
 
   searchLot({ query }: { query: string }): Lot[] {
     return this.searchIndex
+      .filter((node) => {
+        return node.strToMatch.includes(query)
+      })
       .filter((node, index, self) => {
-        return node.strToMatch.includes(query) && 
-               self.findIndex((value) => value.key === node.key) === index
+        // Make sure matches are unique
+        // Ie. if a match is found in the description and lotCode, only add
+        // the SearchNode once
+        return self.findIndex((value) => value.key === node.key) === index
       })
       .map(match => this.getLot(match.key))
   }
