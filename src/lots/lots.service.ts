@@ -45,7 +45,6 @@ export class LotsService {
           }
         }
       })
-      console.log(`this.searchIndex => `, this.searchIndex)
     })
   }
 
