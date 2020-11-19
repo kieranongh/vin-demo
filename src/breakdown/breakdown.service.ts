@@ -27,7 +27,6 @@ export class BreakdownService {
 
   getBreakdown(lotCode: string, key: string, key2?: string): object {
     const lot: Lot = this.lotsService.getLot(lotCode)
-    console.log(`lot => `, lot)
     const { components } = lot
     
     // sorts components by key and accumulates the percentages
